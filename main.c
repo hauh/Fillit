@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:58:37 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/20 18:34:57 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/20 19:30:18 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		main(int argc, char **argv)
 	if (argc == 2)
 	{
 		fd = open(argv[1], O_RDONLY);
-		new = store_pieces(fd);
+		new = store_tetris(fd);
 		print_figures(&new);
 //		fillit(&new);
 	}
