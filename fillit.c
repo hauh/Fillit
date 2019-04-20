@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 17:25:30 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/20 17:50:09 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/20 21:10:33 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,80 @@
 
 #include <stdio.h>
 
-// IT DOESNT WORK
-/*
-static int solve(char ***square, t_tetris **pieces, unsigned int size)
+static int check_spot(char ***square, t_tetris **list)
+{
+	int x;
+	int y;
+
+	if (ft_strlen(**square) >= (*list)->cols)
+	{
+		y = 0;
+		while (y < (*list)->rows)
+		{
+			x = 0;
+			while (x < (*list)->cols)
+			{
+				if ((*square)[y][x] != '.' && (*list)->figure[y][x] != '.')
+					return (1);
+				x++;
+			}
+			y++;
+		}
+	}
+	return (0);
+}
+
+static int find_dot(char *line)
+{
+	char *line0;
+
+	line0 = line;
+	while (*line)
+	{
+		if (*line == '.')
+			return (line - line0);
+		line++;
+	}
+	return (0);
+}
+
+static int solve(char **square, t_tetris **list, int size)
 {
 	int i;
+	int j;
+	int dot;
 
-	i = 0;
-	while ((*square)[i])
+	if (*list)
 	{
-		if ((ft_strlen((*square)[i]) + ft_strlen((*pieces)->figure[0])) <= size)
-			(*square)[i] = ft_strcat((*square)[i], (*pieces)->figure[0]);
-		else
-			return (1);
-		i++;
+		i = 0;
+		while (i < size)
+		{
+			if (!square[i])
+				return (1);
+			dot = find_dot(square[i]);
+			if ((*list)->figure[i])
+			{
+				if (ft_strlen(square[i]) - dot < ft_strlen((*list)->figure[i]))
+				{
+					printf("size next\n");
+					return (1);
+				}
+				j = 0;
+				while ((*list)->figure[i][j])
+				{
+					square[i][dot + j] = (*list)->figure[i][j];
+					j++;
+				}
+				printf("%s\n", square[i]);
+			}
+			else
+				break;
+			i++;
+		}
+		printf("add next\n");
+		return (solve(square, &(*list)->next, size));
 	}
-	printf("first line: %s\n", (*square)[0]);
-	printf("%s\n", (*pieces)->next->figure[0]);
-	if (i < (*pieces)->rows)
-	{
-		printf("!!!");
-		if ((*pieces)->next)
-			return (solve(&*square, &(*pieces)->next, size));
-		printf("return 0\n");
-		return (0);
-	}
-	return (1);
+	return (0);
 }
 
 static char **create_square(unsigned int size)
@@ -52,8 +100,7 @@ static char **create_square(unsigned int size)
 	while (i < size)
 	{
 		square[i] = (char *)malloc(sizeof(char) * (size + 1));
-		ft_memset(square[i], '0', size);
-		square[i][size] = '\0';
+		ft_memset(square[i], '.', size);
 		i++;
 	}
 	square[size] = NULL;
@@ -61,18 +108,17 @@ static char **create_square(unsigned int size)
 	return (square);
 }
 
-void fillit(t_tetris **pieces)
+void fillit(t_tetris **list)
 {
 	unsigned int size;
 	char **square;
 
-	size = 2;
-	while (size < 16)
+	size = 4;
+	while (size < 20)
 	{
 		square = create_square(size);
-		if (!solve(&square, pieces, size))
+		if (!solve(square, list, size))
 			break ;
 		size++;
 	}
 }
-*/
