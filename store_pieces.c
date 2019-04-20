@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:33:47 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/19 20:02:09 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/20 18:30:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-static int is_empty(char *line)
+static int is_empty_row(char *line)
 {
 	while (*line)
 	{
@@ -25,7 +25,35 @@ static int is_empty(char *line)
 	return (1);
 }
 
-static void	new_piece(int fd, t_piece **figures)
+static void remove_empty_cols(t_tetris **list)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 0;
+	while (i < (*list)->rows)
+	{
+		if ((*list)->figure[i][0] == '.')
+			count++;
+		i++;
+	}
+	if (count == (*list)->rows)
+	{
+		while (i)
+		{
+			i--;
+			(*list)->figure[i] = ft_strcpy((*list)->figure[i], &(*list)->figure[i][1]);
+		}
+		(*list)->cols--;
+	}
+	if (count == (*list)->rows)
+		remove_empty_cols(&*list);
+	else
+		return ;
+}
+
+static void	new_piece(int fd, t_tetris **list)
 {
 	char *line;
 	static int num = 0;
@@ -34,45 +62,47 @@ static void	new_piece(int fd, t_piece **figures)
 	int k;
 	int n;
 
-	*figures = (t_piece *)malloc(sizeof(t_piece));
-	(*figures)->next = NULL;
+	*list = (t_tetris *)malloc(sizeof(t_tetris));
+	(*list)->next = NULL;
+	(*list)->figure = (char **)malloc(sizeof(char *) * 5);
 	k = 0;
 	i = 0;
 	while ((n = get_next_line(fd, &line)) && i < 4)
 	{
-		if (!is_empty(line))
+		if (!is_empty_row(line))
 		{
+			(*list)->figure[k] = (char *)malloc(sizeof(char) * 5);
+			ft_bzero((*list)->figure[k], 5);
 			j = 0;
 			while (*(line + j))
 			{
 				if (*(line + j) == '.')
-					(*figures)->fig[k][j] = '0';
+					(*list)->figure[k][j] = '.';
 				else
-					(*figures)->fig[k][j] = *(line + j) + 30 + num;
+					(*list)->figure[k][j] = *(line + j) + 30 + num;
 				j++;
 			}
-			(*figures)->fig[k][j] = '\0';
-			printf("%s\n", (*figures)->fig[k]);
+			(*list)->figure[k][j] = '\0';
 			k++;
 		}
 		i++;
 	}
-	(*figures)->cols = j;
-	(*figures)->rows = k;
-	printf("cols = %d\n", (*figures)->cols);
-	printf("rows = %d\n", (*figures)->rows);
+	(*list)->figure[k] = NULL;
+	(*list)->cols = j;
+	(*list)->rows = k;
+	remove_empty_cols(list);
 	num++;
 	if (n)
-		new_piece(fd, &(*figures)->next);
+		new_piece(fd, &(*list)->next);
 	else
 		return ;
 }
 
-t_piece	*store_pieces(int fd)
+t_tetris	*store_pieces(int fd)
 {
-	t_piece *figures;
+	t_tetris *figures;
 
-	figures = (t_piece *)malloc(sizeof(t_piece));
+	figures = (t_tetris *)malloc(sizeof(t_tetris));
 	figures->next = NULL;
 	new_piece(fd, &figures);
 	return (figures);
