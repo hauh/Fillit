@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 17:25:30 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/20 23:16:27 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/21 19:26:30 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,39 +66,35 @@ static void add_piece(char **square, t_tetris **list, int y, int x)
 		j = 0;
 		while (j < (*list)->cols)
 		{
-			square[y + i][x + j] = (*list)->figure[i][j];
+			if ((*list)->figure[i][j] != '.')
+				square[y + i][x + j] = (*list)->figure[i][j];
 			j++;
 		}
 		i++;
 	}
 }
 
-static int solve(char **square, t_tetris **list, int size)
+static int solve(char **square, t_tetris **list, int size, int y, int x)
 {
-	int i;
-	int j;
-
 	if (*list)
 	{
-		i = 0;
-		while (i + (*list)->rows <= size)
+		if (y + (*list)->rows <= size)
 		{
-			j = 0;
-			while (j + (*list)->cols <= size)
+			if (x + (*list)->cols <= size)
 			{
-				printf("spot[%d][%d]: %d\n", i, j, check_spot(square, list, i, j));
-				if (!check_spot(square, list, i, j))
+				printf("spot[%d][%d]: %d\n", y, x, check_spot(square, list, y, x));
+				if (!check_spot(square, list, y, x))
 				{
-					add_piece(square, list, i, j);
-					i = size;
+					add_piece(square, list, y, x);
 					print_solution(&*square);
 					printf("add next\n");
-					return (solve(square, &(*list)->next, size));
-					break;
+					return (solve(square, &(*list)->next, size, 0, 0));
 				}
-				j++;
+				if (x + 1 + (*list)->cols <= size)
+					return (solve(square, list, size, y, x + 1));
 			}
-			i++;
+			if (y + 1 + (*list)->rows <= size)
+				return (solve(square, list, size, y + 1, 0));
 		}
 		return (1);
 	}
@@ -133,7 +129,7 @@ void fillit(t_tetris **list)
 	while (size < 20)
 	{
 		square = create_square(size);
-		if (!solve(square, list, size))
+		if (!solve(square, list, size, 0, 0))
 			break ;
 		size++;
 	}
