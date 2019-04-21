@@ -6,13 +6,11 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:58:37 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/20 19:51:37 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/21 21:37:55 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
-
-#include <stdio.h>
 
 static void print_figures(t_tetris **list)
 {
@@ -23,12 +21,10 @@ static void print_figures(t_tetris **list)
 	{
 		while ((*list)->figure[i])
 		{
-			printf("%s\n", (*list)->figure[i]);
+			ft_putendl((*list)->figure[i]);
 			i++;
 		}
-		printf("rows: %d\n", (*list)->rows);
-		printf("cols: %d\n", (*list)->cols);
-		printf("\n");
+		ft_putchar('\n');
 		print_figures(&(*list)->next);
 	}
 }

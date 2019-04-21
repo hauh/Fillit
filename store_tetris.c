@@ -6,13 +6,13 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:33:47 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/20 19:37:47 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/21 21:34:20 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static int	is_empty(char *line)
+static int	is_empty_row(char *line)
 {
 	while (*line)
 	{
@@ -23,30 +23,50 @@ static int	is_empty(char *line)
 	return (1);
 }
 
-static void	shift_to_left(t_tetris **list)
+static int is_empty_col(char **arr, int col, int rows)
 {
-	int count;
 	int i;
 
 	i = 0;
-	count = 0;
-	while (i < (*list)->rows)
+	while (i < rows)
 	{
-		if ((*list)->figure[i][0] == '.')
-			count++;
+		if (arr[i][col] != '.')
+			return (0);
 		i++;
 	}
-	if (count == (*list)->rows)
+	return (1);
+}
+
+static void shift_string(char *s)
+{
+	while (*s)
 	{
-		while (i)
-		{
-			i--;
-			(*list)->figure[i] = ft_strcpy((*list)->figure[i], &(*list)->figure[i][1]);
-		}
-		(*list)->cols--;
+		*s = *(s + 1);
+		s++;
 	}
-	if (count == (*list)->rows)
-		shift_to_left(&*list);
+}
+
+static void trim_empty_cols(t_tetris **list)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < (*list)->cols)
+	{
+		if (is_empty_col((*list)->figure, i, (*list)->rows))
+		{
+			j = 0;
+			while (j < (*list)->rows)
+			{
+				shift_string(&(*list)->figure[j][i]);
+				j++;
+			}
+			(*list)->cols--;
+		}
+		else
+			i++;
+	}
 }
 
 t_tetris	*store_tetris(int fd)
@@ -60,9 +80,9 @@ t_tetris	*store_tetris(int fd)
 	list->next = NULL;
 	list->figure = (char **)malloc(sizeof(char *) * 5);
 	list->rows = 0;
-	while ((rd = get_next_line(fd, &line)) && *line != '\0')
+	while ((rd = get_next_line(fd, &line)) && (*line != '\0'))
 	{
-		if (!is_empty(line))
+		if (!is_empty_row(line))
 		{
 			list->figure[list->rows] = (char *)malloc(sizeof(char) * 5);
 			ft_bzero(list->figure[list->rows], 5);
@@ -80,7 +100,7 @@ t_tetris	*store_tetris(int fd)
 		}
 	}
 	list->figure[list->rows] = NULL;
-	shift_to_left(&list);
+	trim_empty_cols(&list);
 	num++;
 	if (rd)
 		list->next = store_tetris(fd);
