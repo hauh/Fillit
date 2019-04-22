@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:33:47 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 18:13:00 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/22 18:33:13 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ static int	is_empty_row(char *line)
 	return (1);
 }
 
-static int	is_empty_col(char **arr, int col, int rows)
+static int	is_empty_col(char **arr, int col)
 {
 	int i;
 
 	i = 0;
-	while (i < rows)
+	while (arr[i])
 	{
 		if (arr[i][col] != '.')
 			return (0);
@@ -37,29 +37,26 @@ static int	is_empty_col(char **arr, int col, int rows)
 	return (1);
 }
 
-static void	shift_string(char *s)
-{
-	while (*s)
-	{
-		*s = *(s + 1);
-		s++;
-	}
-}
-
 static void	trim_empty_cols(t_tetris **list)
 {
-	int i;
-	int j;
+	char	*s;
+	int		i;
+	int		j;
 
 	i = 0;
 	while (i < (*list)->cols)
 	{
-		if (is_empty_col((*list)->figure, i, (*list)->rows))
+		if (is_empty_col((*list)->figure, i))
 		{
 			j = 0;
 			while (j < (*list)->rows)
 			{
-				shift_string(&(*list)->figure[j][i]);
+				s = &(*list)->figure[j][i];
+				while (*s)
+				{
+					*s = *(s + 1);
+					s++;
+				}
 				j++;
 			}
 			(*list)->cols--;
@@ -69,6 +66,25 @@ static void	trim_empty_cols(t_tetris **list)
 	}
 }
 
+static t_tetris *new_figure(void)
+{
+	t_tetris *list;
+
+	list = (t_tetris *)malloc(sizeof(t_tetris));
+	if (!list)
+		return (NULL);
+	list->next = NULL;
+	list->figure = (char **)malloc(sizeof(char *) * 5);
+	if (!list->figure)
+	{
+		free(list);
+		return (NULL);
+	}
+	list->rows = 0;
+	list->cols = 0;
+	return (list);
+}
+
 t_tetris	*store_tetris(int fd)
 {
 	static int	num = 30;
@@ -76,12 +92,9 @@ t_tetris	*store_tetris(int fd)
 	char		*line;
 	int			rd;
 
-	list = (t_tetris *)malloc(sizeof(t_tetris));
+	list = new_figure();
 	if (!list)
 		return (NULL);
-	list->next = NULL;
-	list->figure = (char **)malloc(sizeof(char *) * 5);
-	list->rows = 0;
 	while ((rd = get_next_line(fd, &line)) && (*line != '\0'))
 	{
 		if (!is_empty_row(line))
