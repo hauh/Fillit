@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 16:24:01 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 16:40:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/22 22:19:21 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,11 @@ static void	remove_piece(char **square, t_tetris **list, int y, int x)
 	}
 }
 
-int			solve(char **square, t_tetris **list, int size, int y, int x)
+int			solve(char **square, t_tetris **list, int y, int x)
 {
+	int size;
+
+	size = ft_strlen(square[0]);
 	if (*list)
 	{
 		if (y + (*list)->rows <= size)
@@ -83,16 +86,16 @@ int			solve(char **square, t_tetris **list, int size, int y, int x)
 				if (!check_spot(square, list, y, x))
 				{
 					add_piece(square, list, y, x);
-					if (!solve(square, &(*list)->next, size, 0, 0))
+					if (!solve(square, &(*list)->next, 0, 0))
 						return (0);
 					else
 						remove_piece(square, list, y, x);
 				}
 				if (x + 1 + (*list)->cols <= size)
-					return (solve(square, list, size, y, x + 1));
+					return (solve(square, list, y, x + 1));
 			}
 			if (y + 1 + (*list)->rows <= size)
-				return (solve(square, list, size, y + 1, 0));
+				return (solve(square, list, y + 1, 0));
 		}
 		return (1);
 	}
