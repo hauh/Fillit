@@ -6,13 +6,13 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:58:37 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 16:38:52 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/22 18:03:31 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static void print_solution(char **square)
+static void	print_and_free(char **square)
 {
 	int i;
 
@@ -20,31 +20,64 @@ static void print_solution(char **square)
 	while (square[i])
 	{
 		ft_putendl(square[i]);
+		free(square[i]);
 		i++;
+	}
+	free(square);
+}
+
+static void	free_tetris(t_tetris **list)
+{
+	int	i;
+
+	if (*list)
+	{
+		free_tetris(&(*list)->next);
+		i = 0;
+		while ((*list)->figure[i])
+		{
+			free((*list)->figure[i]);
+			i++;
+		}
+		free((*list)->figure);
+		free(*list);
 	}
 }
 
-int		main(int argc, char **argv)
+static void	error(void)
 {
-	int fd;
-	int count;
-	char **solution;
-	t_tetris *new;
-	t_tetris *tmp;
+	ft_putstr("error\n");
+	exit(1);
+}
 
-	if (argc == 2)
+int			main(int argc, char **argv)
+{
+	char		**solution;
+	t_tetris	*list;
+	t_tetris	*tmp;
+	int			count;
+	int			fd;
+
+	if (argc != 2)
+		error();
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		error();
+	list = store_tetris(fd);
+	close(fd);
+	if (!list)
+		error();
+	count = 0;
+	tmp = list;
+	while (tmp)
 	{
-		fd = open(argv[1], O_RDONLY);
-		new = store_tetris(fd);
-		count = 0;
-		tmp = new;
-		while (tmp)
-		{
-			count++;
-			tmp = tmp->next;
-		}
-		solution = fillit(&new, count);
-		print_solution(solution);
+		count++;
+		tmp = tmp->next;
 	}
+	solution = fillit(&list, count);
+	free_tetris(&list);
+	if (!solution)
+		error();
+	print_and_free(solution);
 	return (0);
 }

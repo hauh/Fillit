@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:33:47 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/21 21:34:20 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/22 18:13:00 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	is_empty_row(char *line)
 	return (1);
 }
 
-static int is_empty_col(char **arr, int col, int rows)
+static int	is_empty_col(char **arr, int col, int rows)
 {
 	int i;
 
@@ -37,7 +37,7 @@ static int is_empty_col(char **arr, int col, int rows)
 	return (1);
 }
 
-static void shift_string(char *s)
+static void	shift_string(char *s)
 {
 	while (*s)
 	{
@@ -46,7 +46,7 @@ static void shift_string(char *s)
 	}
 }
 
-static void trim_empty_cols(t_tetris **list)
+static void	trim_empty_cols(t_tetris **list)
 {
 	int i;
 	int j;
@@ -77,6 +77,8 @@ t_tetris	*store_tetris(int fd)
 	int			rd;
 
 	list = (t_tetris *)malloc(sizeof(t_tetris));
+	if (!list)
+		return (NULL);
 	list->next = NULL;
 	list->figure = (char **)malloc(sizeof(char *) * 5);
 	list->rows = 0;
