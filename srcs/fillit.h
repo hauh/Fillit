@@ -6,7 +6,7 @@
 /*   By: ckatelin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 15:08:24 by ckatelin          #+#    #+#             */
-/*   Updated: 2019/04/22 22:34:56 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/23 17:29:38 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ int				check_validation(int fd);
 t_tetris		*store_tetris(int fd);
 int				solve(char **square, t_tetris **list, int y, int x);
 char			**fillit(t_tetris **list);
+void			free_square(char **square, int i);
 
 #endif

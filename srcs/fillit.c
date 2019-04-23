@@ -6,13 +6,13 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 17:25:30 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 22:38:12 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/23 17:29:12 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static void	free_square(char **square, int i)
+void		free_square(char **square, int i)
 {
 	while (i)
 	{

@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 16:24:01 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 22:19:21 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/23 16:36:30 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,21 @@ static int	check_spot(char **square, t_tetris **list, int y, int x)
 	int j;
 
 	i = 0;
-	while (i < (*list)->rows)
+	if (x + (*list)->cols <= (int)ft_strlen(square[0]))
 	{
-		j = 0;
-		while (j < (*list)->cols)
+		while (i < (*list)->rows)
 		{
-			if ((square[y + i][x + j] != '.') && ((*list)->figure[i][j] != '.'))
-				return (1);
-			j++;
+			j = 0;
+			while (j < (*list)->cols)
+			{
+				if ((square[y + i][x + j] != '.') &&
+					((*list)->figure[i][j] != '.'))
+					return (0);
+				j++;
+			}
+			i++;
 		}
-		i++;
+		return (1);
 	}
 	return (0);
 }
@@ -79,24 +84,21 @@ int			solve(char **square, t_tetris **list, int y, int x)
 	{
 		if (y + (*list)->rows <= size)
 		{
-			while ((square[y][x] != '.') && (square[y][x] != '\0') && ((*list)->figure[0][0] != '.'))
+			while ((square[y][x] != '\0') && !check_spot(square, list, y, x))
 				x++;
-			if (x + (*list)->cols <= size)
+			if (check_spot(square, list, y, x))
 			{
-				if (!check_spot(square, list, y, x))
-				{
-					add_piece(square, list, y, x);
-					if (!solve(square, &(*list)->next, 0, 0))
-						return (0);
-					else
-						remove_piece(square, list, y, x);
-				}
-				if (x + 1 + (*list)->cols <= size)
-					return (solve(square, list, y, x + 1));
+				add_piece(square, list, y, x);
+				if (!solve(square, &(*list)->next, 0, 0))
+					return (0);
+				else
+					remove_piece(square, list, y, x);
 			}
-			if (y + 1 + (*list)->rows <= size)
-				return (solve(square, list, y + 1, 0));
+			if (x + 1 + (*list)->cols <= size)
+				return (solve(square, list, y, x + 1));
 		}
+		if (y + 1 + (*list)->rows <= size)
+			return (solve(square, list, y + 1, 0));
 		return (1);
 	}
 	return (0);
