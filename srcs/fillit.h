@@ -6,7 +6,7 @@
 /*   By: ckatelin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 15:08:24 by ckatelin          #+#    #+#             */
-/*   Updated: 2019/04/23 17:29:38 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/23 21:14:59 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ typedef struct	s_tetris
 	struct s_tetris	*next;
 }				t_tetris;
 
-void			print_error(void);
-int				check_validation(int fd);
+void			error(void);
+void			validate(char *file);
 t_tetris		*store_tetris(int fd);
-int				solve(char **square, t_tetris **list, int y, int x);
 char			**fillit(t_tetris **list);
 void			free_square(char **square, int i);
+int				solve(char **square, t_tetris **list, int y, int x);
 
 #endif

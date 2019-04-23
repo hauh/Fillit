@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:58:37 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/22 22:35:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/23 21:44:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	print_and_free(char **square)
 	free(square);
 }
 
-static void	error(void)
+void		error(void)
 {
 	ft_putstr("error\n");
 	exit(1);
@@ -58,6 +58,7 @@ int			main(int argc, char **argv)
 
 	if (argc != 2)
 		error();
+	validate(argv[1]);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		error();

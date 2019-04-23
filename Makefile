@@ -6,12 +6,12 @@
 #    By: ckatelin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/17 14:24:36 by ckatelin          #+#    #+#              #
-#    Updated: 2019/04/22 21:53:40 by smorty           ###   ########.fr        #
+#    Updated: 2019/04/23 21:15:22 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fillit
-SRCS = srcs/main.c srcs/store_tetris.c srcs/fillit.c srcs/solve.c srcs/get_next_line/get_next_line.c srcs/get_next_line/libft/libft.a
+SRCS = srcs/main.c srcs/validate.c srcs/store_tetris.c srcs/fillit.c srcs/solve.c srcs/get_next_line/get_next_line.c srcs/get_next_line/libft/libft.a
 HEADER = srcs/fillit.h
 FLAGS = -Wall -Wextra -Werror 
 
