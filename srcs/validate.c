@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 20:04:00 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/24 16:24:47 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/24 16:47:58 by ckatelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,30 +55,40 @@ static int	check_figure(char *line, char *line0, char *line20)
 	return (res);
 }
 
+static int	check(char *buf)
+{
+	char *dash;
+
+	if (is_wrong_line(buf))
+		return (1);
+	dash = buf;
+	while (*dash != '#')
+		dash++;
+	if (check_figure(dash, buf, &buf[20]) != 4)
+		return (1);
+	return (0);
+}
+
 static int	is_wrong_figures(int fd)
 {
 	char	buf[22];
-	char	*dash;
 	int		rd;
 
-	ft_bzero(buf, 22);	
+	ft_bzero(buf, 22);
 	rd = read(fd, buf, 21);
 	if (rd <= 0)
 		return (1);
-	while (rd)
+	while (rd && rd == 21)
 	{
-		if (is_wrong_line(buf))
-			return (1);
-		dash = buf;
-		while (*dash != '#')
-			dash++;
-		if (check_figure(dash, buf, &buf[20]) != 4)
+		if (check(buf))
 			return (1);
 		ft_bzero(buf, 22);
 		rd = read(fd, buf, 21);
 		if (rd < 0)
 			return (1);
 	}
+	if (check(buf))
+		return (1);
 	return (0);
 }
 
