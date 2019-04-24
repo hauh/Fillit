@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 20:04:00 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/24 00:29:42 by smorty           ###   ########.fr       */
+/*   Updated: 2019/04/24 16:24:47 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,28 @@ static int	is_wrong_line(char *line)
 	dash = 0;
 	dot = 0;
 	if ((line[4] != '\n') && (line[9] != '\n') && (line[14] != '\n')
-		&& (line[19] != '\n') && (line[20] != '\n'))
+		&& (line[19] != '\n'))
 		return (1);
 	while (*line)
 	{
 		if (*line == '#')
 			dash++;
-		else if (*line == '.')
+		if (*line == '.')
 			dot++;
-		else if (*line != '\n')
-			return (1);
 		line++;
 	}
-	if ((dash != 4) || (dot != 12))
-		return (1);
-	return (0);
+	if ((dash == 4) && (dot == 12))
+		return (0);
+	return (1);
 }
 
 static int	check_figure(char *line, char *line0, char *line20)
 {
 	int res;
 
-	res = 0;
 	if (*line == '#')
 	{
-		res++;
+		res = 1;
 		*line = '*';
 		if (line + 5 <= line20)
 			res += check_figure(line + 5, line0, line20);
@@ -64,12 +61,12 @@ static int	is_wrong_figures(int fd)
 	char	*dash;
 	int		rd;
 
+	ft_bzero(buf, 22);	
 	rd = read(fd, buf, 21);
 	if (rd <= 0)
 		return (1);
 	while (rd)
 	{
-		buf[21] = '\0';
 		if (is_wrong_line(buf))
 			return (1);
 		dash = buf;
@@ -77,6 +74,7 @@ static int	is_wrong_figures(int fd)
 			dash++;
 		if (check_figure(dash, buf, &buf[20]) != 4)
 			return (1);
+		ft_bzero(buf, 22);
 		rd = read(fd, buf, 21);
 		if (rd < 0)
 			return (1);
