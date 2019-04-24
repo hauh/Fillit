@@ -6,7 +6,7 @@
 #    By: ckatelin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/17 14:24:36 by ckatelin          #+#    #+#              #
-#    Updated: 2019/04/24 18:08:23 by ckatelin         ###   ########.fr        #
+#    Updated: 2019/04/24 20:34:59 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,9 @@ $(NAME):
 	gcc $(FLAGS) $(SRCS) -I $(HEADER) -L$(LIB) -lft -o $(NAME)
 
 clean:
-	make clean -C $(LIB)
+	make fclean -C $(LIB)
 
 fclean: clean
-	make fclean -C $(LIB)
 	rm -f $(NAME)
 
 re: fclean all

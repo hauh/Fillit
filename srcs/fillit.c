@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 17:25:30 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/24 17:21:38 by ckatelin         ###   ########.fr       */
+/*   Updated: 2019/04/24 20:28:24 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,15 @@ static int	starting_size(t_tetris *list)
 	return (n);
 }
 
-char		**fillit(t_tetris **list)
+char		**fillit(t_tetris *list)
 {
 	char	**square;
 	int		size;
 
-	size = starting_size(*list);
+	size = starting_size(list);
 	square = create_square(size);
+	if (!square)
+		return (NULL);
 	while (solve(square, list, 0, 0))
 	{
 		free_square(square, size);

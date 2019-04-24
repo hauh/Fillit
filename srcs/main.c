@@ -6,27 +6,27 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 15:58:37 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/24 17:32:34 by ckatelin         ###   ########.fr       */
+/*   Updated: 2019/04/24 20:30:15 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-static void	free_tetris(t_tetris **list)
+static void	free_tetris(t_tetris *list)
 {
 	int	i;
 
-	if (*list)
+	if (list)
 	{
-		free_tetris(&(*list)->next);
+		free_tetris(list->next);
 		i = 0;
-		while ((*list)->figure[i])
+		while (list->figure[i])
 		{
-			free((*list)->figure[i]);
+			free(list->figure[i]);
 			i++;
 		}
-		free((*list)->figure);
-		free(*list);
+		free(list->figure);
+		free(list);
 	}
 }
 
@@ -44,6 +44,12 @@ static void	print_and_free(char **square)
 	free(square);
 }
 
+static void	usage(void)
+{
+	ft_putstr("usage: fillit file\n");
+	exit(1);
+}
+
 void		error(void)
 {
 	ft_putstr("error\n");
@@ -57,7 +63,7 @@ int			main(int argc, char **argv)
 	int			fd;
 
 	if (argc != 2)
-		error();
+		usage();
 	validate(argv[1]);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
@@ -66,8 +72,8 @@ int			main(int argc, char **argv)
 	close(fd);
 	if (!list)
 		error();
-	solution = fillit(&list);
-	free_tetris(&list);
+	solution = fillit(list);
+	free_tetris(list);
 	if (!solution)
 		error();
 	print_and_free(solution);
