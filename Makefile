@@ -20,7 +20,7 @@ all: $(NAME)
 
 $(NAME):
 	make -C $(LIB)
-	gcc $(FLAGS) $(SRCS) -I $(HEADER) -L$(LIB) -lft -o $(NAME)
+	gcc $(FLAGS) $(SRCS) -I $(HEADER) -L$(LIB) -lft -o $(NAME) -g
 
 clean:
 	make fclean -C $(LIB)
