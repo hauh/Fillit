@@ -6,7 +6,7 @@
 /*   By: smorty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 20:04:00 by smorty            #+#    #+#             */
-/*   Updated: 2019/04/24 19:46:19 by smorty           ###   ########.fr       */
+/*   Updated: 2019/05/02 14:26:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 static int	is_wrong_chars(char *line)
 {
-	int dash;
+	int hash;
 	int dot;
 
 	if ((line[4] != '\n') || (line[9] != '\n') ||
 		(line[14] != '\n') || (line[19] != '\n'))
 		return (1);
-	dash = 0;
+	hash = 0;
 	dot = 0;
 	while (*line)
 	{
 		if (*line == '#')
-			dash++;
+			hash++;
 		if (*line == '.')
 			dot++;
 		line++;
 	}
-	if ((dash != 4) || (dot != 12))
+	if ((hash != 4) || (dot != 12))
 		return (1);
 	return (0);
 }
