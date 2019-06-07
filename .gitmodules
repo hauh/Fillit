@@ -1,6 +1,0 @@
-[submodule "srcs/libft"]
-	path = srcs/libft
-	url = https://github.com/hauh/libft.git
-[submodule "srcs/get_next_line"]
-	path = srcs/get_next_line
-	url = https://github.com/hauh/get_next_line.git
